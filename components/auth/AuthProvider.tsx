@@ -34,7 +34,7 @@ export const AuthContext = createContext<AuthContextValue | null>(null);
 const resolveRole = async (): Promise<UserRole> => {
   const session = await fetchAuthSession();
   const groups = session.tokens?.idToken?.payload['cognito:groups'];
-  if (Array.isArray(groups) && groups.includes('admins')) return 'admin';
+  if (Array.isArray(groups) && groups.includes('Admins')) return 'admin';
   return 'user';
 };
 
