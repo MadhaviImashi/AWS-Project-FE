@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getEvent, attachFile, deleteFile, getEventRegistrations } from '@/lib/api/events';
-import { getUploadUrl, uploadFileToS3 } from '@/lib/api/files';
+import { getUploadUrl, uploadFileToS3, getViewUrl } from '@/lib/api/files';
 import type { Event, Registration } from '@/types';
 import Button from '@/components/ui/Button';
 
@@ -92,10 +92,16 @@ export default function AdminEventDetailPage() {
           <ul className="divide-y divide-gray-100">
             {event.files.map((f) => (
               <li key={f.id} className="flex items-center justify-between py-3">
-                <div>
-                  <p className="text-sm font-medium text-gray-900">{f.file_name}</p>
+                <button
+                  className="text-left hover:underline"
+                  onClick={async () => {
+                    const url = await getViewUrl(f.s3_key);
+                    window.open(url, '_blank');
+                  }}
+                >
+                  <p className="text-sm font-medium text-blue-600">{f.file_name}</p>
                   <p className="text-xs text-gray-400 capitalize">{f.file_type}</p>
-                </div>
+                </button>
                 <Button
                   variant="danger"
                   className="py-1 px-3 text-xs"

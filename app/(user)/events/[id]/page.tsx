@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { getEvent } from '@/lib/api/events';
 import { registerForEvent, cancelRegistration, getMyRegistrations } from '@/lib/api/registrations';
+import { getViewUrl } from '@/lib/api/files';
 import type { Event } from '@/types';
 import Button from '@/components/ui/Button';
 
@@ -85,10 +86,18 @@ export default function UserEventDetailPage() {
           <h2 className="font-semibold text-gray-900 mb-3">Attachments</h2>
           <ul className="flex flex-col gap-2">
             {event.files.map((f) => (
-              <li key={f.id} className="flex items-center gap-2 text-sm text-gray-600">
-                <span className="w-2 h-2 rounded-full bg-gray-300 shrink-0" />
-                {f.file_name}
-                <span className="text-gray-400 capitalize">({f.file_type})</span>
+              <li key={f.id}>
+                <button
+                  className="flex items-center gap-2 text-sm text-blue-600 hover:underline text-left"
+                  onClick={async () => {
+                    const url = await getViewUrl(f.s3_key);
+                    window.open(url, '_blank');
+                  }}
+                >
+                  <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />
+                  {f.file_name}
+                  <span className="text-gray-400 capitalize">({f.file_type})</span>
+                </button>
               </li>
             ))}
           </ul>

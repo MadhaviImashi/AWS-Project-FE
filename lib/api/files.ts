@@ -10,3 +10,6 @@ export const uploadFileToS3 = async (uploadUrl: string, file: File): Promise<voi
     headers: { 'Content-Type': file.type },
   });
 };
+
+export const getViewUrl = (s3Key: string) =>
+  client.get<{ viewUrl: string }>('/api/v1/files/view-url', { params: { s3Key } }).then((r) => r.data.viewUrl);
