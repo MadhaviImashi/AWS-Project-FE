@@ -1,20 +1,23 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth/useAuth';
 
-export default function Home() {
-  const [result, setResult] = useState<string>("Loading...");
+export default function RootPage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/health`)
-      .then((res) => res.json())
-      .then((data) => setResult(JSON.stringify(data)))
-      .catch((err) => setResult(`Error: ${err.message}`));
-  }, []);
+    if (loading) return;
+    if (!user) return router.replace('/login');
+    if (user.role === 'admin') return router.replace('/admin/events');
+    router.replace('/events');
+  }, [user, loading, router]);
 
   return (
     <div className="flex flex-1 items-center justify-center">
-      <pre>{result}</pre>
+      <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
     </div>
   );
 }
