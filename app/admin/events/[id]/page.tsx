@@ -57,7 +57,7 @@ export default function AdminEventDetailPage() {
     }
   };
 
-  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" /></div>;
   if (!event) return <p className="text-red-600">Event not found.</p>;
 
   return (
@@ -99,7 +99,7 @@ export default function AdminEventDetailPage() {
                     window.open(url, '_blank');
                   }}
                 >
-                  <p className="text-sm font-medium text-blue-600">{f.file_name}</p>
+                  <p className="text-sm font-medium text-purple-600">{f.file_name}</p>
                   <p className="text-xs text-gray-400 capitalize">{f.file_type}</p>
                 </button>
                 <Button

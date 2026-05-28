@@ -13,7 +13,7 @@ export default function UserEventsPage() {
     getEvents().then(setEvents).finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" /></div>;
 
   return (
     <div>
@@ -24,9 +24,9 @@ export default function UserEventsPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
             <Link key={event.id} href={`/events/${event.id}`}>
-              <div className="bg-white rounded-2xl border border-gray-200 p-5 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer h-full">
+              <div className="bg-white rounded-2xl border border-gray-200 p-5 hover:border-purple-300 hover:shadow-sm transition-all cursor-pointer h-full">
                 <h2 className="font-semibold text-gray-900 mb-2">{event.title}</h2>
-                <p className="text-sm text-blue-600 font-medium mb-1">{event.date} · {event.time}</p>
+                <p className="text-sm text-purple-600 font-medium mb-1">{event.date} · {event.time}</p>
                 {event.description && (
                   <p className="text-sm text-gray-500 line-clamp-2 mt-2">{event.description}</p>
                 )}

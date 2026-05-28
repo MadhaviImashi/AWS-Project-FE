@@ -33,41 +33,45 @@ function ConfirmForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Verify your email</h1>
-        <p className="text-sm text-gray-500 mb-6">
-          Enter the 6-digit code sent to your email
-        </p>
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <Input
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <Input
-            label="Confirmation code"
-            type="text"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder="123456"
-            required
-            autoFocus
-          />
-          {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
-          <Button type="submit" loading={loading} className="w-full mt-1">
-            Verify email
-          </Button>
-        </form>
-
-        <p className="text-sm text-gray-500 text-center mt-6">
-          <Link href="/login" className="text-blue-600 hover:underline font-medium">
-            Back to sign in
-          </Link>
-        </p>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-purple-50 to-purple-100">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <span className="font-black text-purple-700 text-3xl tracking-tight">CW</span>
+          <span className="font-bold text-gray-800 text-3xl tracking-tight">Events</span>
+        </div>
+        <div className="bg-white rounded-2xl shadow-sm border border-purple-100 p-8">
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Verify your email</h1>
+          <p className="text-sm text-gray-500 mb-6">
+            Enter the 6-digit code sent to your email
+          </p>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <Input
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              label="Confirmation code"
+              type="text"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="123456"
+              required
+              autoFocus
+            />
+            {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
+            <Button type="submit" loading={loading} className="w-full mt-1">
+              Verify email
+            </Button>
+          </form>
+          <p className="text-sm text-gray-500 text-center mt-6">
+            <Link href="/login" className="text-purple-600 hover:underline font-medium">
+              Back to sign in
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

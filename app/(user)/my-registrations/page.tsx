@@ -29,7 +29,7 @@ export default function MyRegistrationsPage() {
     }
   };
 
-  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" /></div>;
 
   return (
     <div>
@@ -37,7 +37,7 @@ export default function MyRegistrationsPage() {
       {registrations.length === 0 ? (
         <div className="text-center py-20">
           <p className="text-gray-400 mb-4">You haven&apos;t registered for any events yet.</p>
-          <Link href="/events" className="text-blue-600 hover:underline font-medium text-sm">
+          <Link href="/events" className="text-purple-600 hover:underline font-medium text-sm">
             Browse events
           </Link>
         </div>
@@ -47,7 +47,7 @@ export default function MyRegistrationsPage() {
             <div key={r.id} className="bg-white rounded-2xl border border-gray-200 p-5 flex items-center justify-between">
               <div>
                 <h2 className="font-semibold text-gray-900">{r.title}</h2>
-                <p className="text-sm text-blue-600 mt-1">{r.date} · {r.time}</p>
+                <p className="text-sm text-purple-600 mt-1">{r.date} · {r.time}</p>
                 <p className="text-xs text-gray-400 mt-1">
                   Registered {new Date(r.registered_at).toLocaleDateString()}
                 </p>

@@ -53,7 +53,7 @@ export default function EditEventPage() {
             value={form.description}
             onChange={set('description')}
             rows={4}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-500 resize-none"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-purple-500 resize-none"
           />
         </div>
         {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}

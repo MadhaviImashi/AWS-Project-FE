@@ -18,21 +18,24 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <span className="font-bold text-gray-900">Codewave Events</span>
-          <nav className="flex gap-4">
-            <Link href="/events" className="text-sm text-gray-600 hover:text-gray-900 font-medium">
+      <header className="bg-purple-700 px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-1">
+            <span className="font-black text-white text-lg tracking-tight">CW</span>
+            <span className="font-semibold text-purple-200 text-lg tracking-tight">Events</span>
+          </div>
+          <nav className="flex gap-5">
+            <Link href="/events" className="text-sm text-purple-200 hover:text-white font-medium transition-colors">
               Events
             </Link>
-            <Link href="/my-registrations" className="text-sm text-gray-600 hover:text-gray-900 font-medium">
+            <Link href="/my-registrations" className="text-sm text-purple-200 hover:text-white font-medium transition-colors">
               My registrations
             </Link>
           </nav>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-500">{user.name ?? user.email}</span>
-          <button onClick={signOut} className="text-sm text-gray-600 hover:text-gray-900 font-medium">
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-purple-300">{user.name ?? user.email}</span>
+          <button onClick={signOut} className="text-sm text-purple-200 hover:text-white font-medium transition-colors">
             Sign out
           </button>
         </div>
