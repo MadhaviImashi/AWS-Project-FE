@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CW Events — Frontend
 
-## Getting Started
+Event management platform built with Next.js, deployed on AWS Amplify.
 
-First, run the development server:
+## Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **Auth**: AWS Amplify v6 (`aws-amplify/auth`)
+- **HTTP Client**: Axios
+- **Package Manager**: pnpm
+
+## AWS Resources
+
+| Resource | Purpose |
+|----------|---------|
+| **AWS Amplify Hosting** | Hosts the Next.js SSR app with CI/CD from GitHub |
+| **Amazon Cognito** | User authentication — sign up, sign in, email verification, JWT tokens |
+| **API Gateway (HTTP API)** | REST API gateway that routes requests to Lambda functions |
+| **AWS Lambda** | Serverless backend handlers (events, registrations, files, email, auth trigger) |
+| **Amazon RDS (PostgreSQL)** | Relational database storing users, events, registrations, and file metadata |
+| **Amazon S3** | Stores uploaded event files (images, documents) |
+| **AWS Secrets Manager** | Manages RDS credentials (auto-rotated) |
+| **Amazon SES** | Sends registration confirmation emails to users |
+
+## Project Structure
+
+```
+app/
+├── (auth)/
+│   ├── login/          # Sign in page
+│   ├── register/       # Sign up page
+│   └── confirm/        # Email verification page
+├── (user)/
+│   ├── events/         # Event listing and detail pages
+│   └── my-registrations/ # User's registered events
+├── admin/
+│   └── events/         # Admin: create, edit, delete events; manage files
+└── page.tsx            # Root redirect (login or events based on auth state)
+
+components/
+└── auth/
+    └── AuthProvider.tsx  # Cognito auth context (tokens, user state, sign in/out)
+
+lib/
+├── amplify.ts          # Amplify configuration
+├── auth/
+│   └── useAuth.ts      # Auth hook
+└── api/
+    ├── client.ts       # Axios instance — attaches Cognito ID token to every request
+    ├── events.ts       # Event and file CRUD API calls
+    └── files.ts        # S3 pre-signed URL helpers
+
+types/
+└── index.ts            # Shared TypeScript types
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Authentication Flow
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. User signs up → Cognito sends verification email
+2. User confirms with code → `auth-postConfirmation` Lambda adds them to the `Users` group and creates a DB record
+3. User signs in → Cognito returns ID token, Access token, Refresh token (stored in `localStorage` by Amplify)
+4. Every API request → Axios interceptor calls `fetchAuthSession()` which automatically refreshes the ID token if expired (using the 30-day Refresh token)
+5. API Gateway JWT authorizer validates the token before forwarding to Lambda
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## File Upload Flow
 
-## Learn More
+Uploads go directly from the browser to S3 — Lambda is only involved in setup and recording:
 
-To learn more about Next.js, take a look at the following resources:
+1. `POST /api/v1/files/upload-url` → Lambda returns a pre-signed S3 PUT URL
+2. Browser PUTs the file directly to S3 (no Lambda, no size limits)
+3. `POST /api/v1/events/:id/files` → Lambda records the file metadata in the DB
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Local Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Clone the repo and install dependencies:
+   ```bash
+   pnpm install
+   ```
 
-## Deploy on Vercel
+2. Create a `.env.local` file:
+   ```env
+   NEXT_PUBLIC_API_URL=https://<your-api-gateway-id>.execute-api.ap-southeast-1.amazonaws.com
+   NEXT_PUBLIC_COGNITO_USER_POOL_ID=ap-southeast-1_xxxxxxxxx
+   NEXT_PUBLIC_COGNITO_APP_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
+   NEXT_PUBLIC_COGNITO_REGION=ap-southeast-1
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Run the development server:
+   ```bash
+   pnpm dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+The app is deployed via **AWS Amplify Hosting** with automatic CI/CD on push to `main`.
+
+Build configuration is defined in [`amplify.yml`](amplify.yml):
+- Installs pnpm v9
+- Runs `pnpm build`
+- Deploys the `.next` output directory
+
+Environment variables are configured in the Amplify Console under the app's environment settings.
+
+## User Roles
+
+| Role | Access |
+|------|--------|
+| **User** | Browse events, register/cancel registrations, view uploaded files |
+| **Admin** | All user access + create/edit/delete events, upload/delete files, view registrations per event |
+
+Roles are managed via Cognito groups (`Users`, `Admins`). The role is read from the `cognito:groups` claim in the ID token.
